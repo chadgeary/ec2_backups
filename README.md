@@ -1,6 +1,7 @@
 # Reference
-AWS lambda function (python3/boto3) invoked via Cloudwatch:
-(in reverse order)
+Backup EC2 instances with a rotational schedule using Lambda invoked via Cloudwatch scheduled expression.
+
+## Steps (in reverse order)
 1. Backup AWS EC2 instances as AMIs. Generation: Current
 2. Move previous Generation: Current to Generation: Previous
 3. Delete previous Generation: Previous
