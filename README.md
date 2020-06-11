@@ -41,3 +41,6 @@ Instance: i-03b48cb4caac5c961 , AMI: ami-0477c5d22c44b5fdd
 END RequestId: 2e61afe8-1d2c-4a67-9858-6d4ea8ba49f0
 REPORT RequestId: 2e61afe8-1d2c-4a67-9858-6d4ea8ba49f0	Duration: 7192.17 ms	Billed Duration: 7200 ms	Memory Size: 128 MB	Max Memory Used: 80 MB	Init Duration: 163.01 ms	
 ```
+
+## Todo
+- Remove snapshots
