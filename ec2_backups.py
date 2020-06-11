@@ -11,7 +11,8 @@ def lambda_handler(event, context):
     # get tag:Generation value:Previous ami(s)
     previous_amis = ec2.describe_images(
       Filters=[
-        {'Name': 'tag:Generation', 'Values': [os.environ['EC2BU_TAG_GENERATION_2']]}
+        {'Name': 'tag:Generation', 'Values': [os.environ['EC2BU_TAG_GENERATION_2']]},
+        {'Name': 'tag:Source', 'Values': [os.environ['EC2BU_TAG_NAME']]}
       ]
     )
 
@@ -29,7 +30,8 @@ def lambda_handler(event, context):
     # get tag:Generation value:Current ami(s)
     current_amis = ec2.describe_images(
       Filters=[
-        {'Name': 'tag:Generation', 'Values': [os.environ['EC2BU_TAG_GENERATION_1']]}
+        {'Name': 'tag:Generation', 'Values': [os.environ['EC2BU_TAG_GENERATION_1']]},
+        {'Name': 'tag:Source', 'Values': [os.environ['EC2BU_TAG_NAME']]}
       ]
     )
 
@@ -87,6 +89,7 @@ def lambda_handler(event, context):
         Tags=[
           {'Key': 'Name', 'Value': backup_instance['tag_name']},
           {'Key': 'Generation', 'Value': os.environ['EC2BU_TAG_GENERATION_1']}
+          {'Key': 'Source:', 'Value': os.environ['EC2BU_TAG_NAME']}
         ]
       )
 
