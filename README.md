@@ -6,13 +6,13 @@ Backup EC2 instances with a rotational schedule using Lambda invoked via Cloudwa
 2. Move previous Generation: Current to Generation: Previous
 3. Delete previous Generation: Previous
 
-# Notes
+## Notes
 - Requires/uses Terraform which uses environment AWS credentials (e.g. ~/.aws/credentials)
 - Includes required IAM role/policy for Lambda function.
 - Generations are managed via Tags
 - Default schedule (in .tf) is 01:00 UTC on Sunday.
 
-# Deploy
+## Deploy
 ```
 # begin terraform
 terraform init
@@ -26,7 +26,7 @@ var.aws_region
   Enter a value: us-east-2
 ```
 
-# Output Example
+## Output Example
 ```
 START RequestId: 2e61afe8-1d2c-4a67-9858-6d4ea8ba49f0 Version: $LATEST
 Deregistering AMIs: 
