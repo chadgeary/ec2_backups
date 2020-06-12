@@ -16,15 +16,36 @@ def lambda_handler(event, context):
       ]
     )
 
+    # get associated snapshots for tag:Generation value:Previous ami(s)
+    # ami -> blockdevicemappings -> ebs volume -> snapshot id
+    previous_snaps = []
+    for ami in previous_amis['Images']:
+      for key, bdms in ami.items():
+        if key == 'BlockDeviceMappings':
+          for bdm in bdms:
+            for key, ebsvols in bdm.items():
+              if key == 'Ebs':
+                for key, snap in ebsvols.items():
+                  if key == 'SnapshotId':
+                    previous_snaps.append(snap)
+    
     print('Deregistering AMIs: ')
 
-    # deregister
+    # deregister amis
     for previous_ami in previous_amis['Images']:
       for key, value in previous_ami.items():
         if key == 'ImageId':
           print(value)
           ami_resource = list(boto3.resource('ec2').images.filter(ImageIds=[value]).all())[0]
           ami_resource.deregister()
+
+    print('Deleting snapshots: ')
+
+    # delete snapshots
+    for previous_snap in previous_snaps:
+      print(previous_snap)
+      ami_resource = list(boto3.resource('ec2').snapshots.filter(SnapshotIds=[previous_snap]).all())[0]
+      ami_resource.delete()
 
   def rotate_current_to_previous():
     # get tag:Generation value:Current ami(s)
@@ -81,15 +102,15 @@ def lambda_handler(event, context):
       )
       ec2_resource = boto3.resource('ec2')
       ami_resource = ec2_resource.Image(ami['ImageId'])
-      print('Instance:',backup_instance['id'],', AMI:',ami['ImageId'])
+      print('Instance:',backup_instance['id'],'AMI:',ami['ImageId'])
       tag_response = ec2.create_tags(
         Resources=[
           ami['ImageId'],
         ],
         Tags=[
           {'Key': 'Name', 'Value': backup_instance['tag_name']},
-          {'Key': 'Generation', 'Value': os.environ['EC2BU_TAG_GENERATION_1']}
-          {'Key': 'Source:', 'Value': os.environ['EC2BU_TAG_NAME']}
+          {'Key': 'Generation', 'Value': os.environ['EC2BU_TAG_GENERATION_1']},
+          {'Key': 'Source', 'Value': os.environ['EC2BU_TAG_NAME']}
         ]
       )
 

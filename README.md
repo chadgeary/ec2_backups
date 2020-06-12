@@ -1,16 +1,15 @@
 # Reference
-Backup EC2 instances with a rotational schedule using Lambda invoked via Cloudwatch scheduled expression.
+Maintain up-to-date backups for EC2 instances with a Cloudwatch scheduled expression executing Lambda (Python3/Boto3) built via Terraform.
 
-## Steps (in reverse order)
-1. Backup AWS EC2 instances as AMIs. Generation: Current
-2. Move previous Generation: Current to Generation: Previous
-3. Delete previous Generation: Previous
+## Lambda (ec2_backups.py)
+Steps are in reverse order.
+3. Create AMIs with tag:Generation:Current and tag:Source:ec2_backups from EC2 instances with tag:Backup:true
+2. Modify AMIs with tag:Generation:Current and tag:Source:ec2_backups to tag:Generation:Previous
+1. Delete AMIs with tag:Generation:Previous and tag:Source:ec2_backups + associated snapshot(s).
 
 ## Notes
-- Requires/uses Terraform which uses environment AWS credentials (e.g. ~/.aws/credentials)
 - Includes required IAM role/policy for Lambda function.
-- Generations are managed via Tags
-- Default schedule (in .tf) is 01:00 UTC on Sunday.
+- Default schedule (in .tf) is 00:00 GMT on Sunday.
 
 ## Deploy
 ```
@@ -24,23 +23,30 @@ var.aws_profile
 
 var.aws_region
   Enter a value: us-east-2
+
+# confirm terraform action(s)
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
 ```
 
 ## Output Example
 ```
-START RequestId: 2e61afe8-1d2c-4a67-9858-6d4ea8ba49f0 Version: $LATEST
+START RequestId: beda210d-f258-439e-9614-8ad4a4311080 Version: $LATEST
 Deregistering AMIs: 
-ami-03640102312b40e44
-ami-054ae9fbcc986c11c
+ami-0233866832fd8ff1a
+ami-067ee5d4d8649204
+Deleting snapshots: 
+snap-02c911235227e207b
+snap-042919322ffdd611
 Rotating AMIs: 
-ami-0233166832fd8ff7d
-ami-067fe5ff4d8649201
+ami-05abc5d22c44b5fdd
+ami-0d24a86f6602b4293
 Creating AMIs from Instances: 
-Instance: i-04862db7a0741b727 , AMI: ami-0e14a86f6612b4293
-Instance: i-03b48cb4caac5c961 , AMI: ami-0477c5d22c44b5fdd
-END RequestId: 2e61afe8-1d2c-4a67-9858-6d4ea8ba49f0
-REPORT RequestId: 2e61afe8-1d2c-4a67-9858-6d4ea8ba49f0	Duration: 7192.17 ms	Billed Duration: 7200 ms	Memory Size: 128 MB	Max Memory Used: 80 MB	Init Duration: 163.01 ms	
+Instance: i-07862db7a0741b757 , AMI: ami-0c2cdc82e02764277
+Instance: i-08b58cb4caac5c9e9 , AMI: ami-0935dc03d8fd95874
+END RequestId: beda210d-f258-439e-9614-8ad4a4311080
+REPORT RequestId: beda210d-f258-439e-9614-8ad4a4311080	Duration: 8064.64 ms	Billed Duration: 8100 ms	Memory Size: 128 MB	Max Memory Used: 83 MB	Init Duration: 160.41 ms
 ```
-
-## Todo
-- Remove snapshots
