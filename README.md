@@ -8,6 +8,7 @@ Steps are in reverse order.
 3. Delete AMIs with tag `Generation:Previous` and tag `Source:ec2_backups` + associated snapshot(s).
 
 ## Notes
+- AMIs do not reboot instances (in .py) 
 - Includes required IAM role/policy for Lambda function.
 - Default schedule (in .tf) is 00:00 GMT on Sunday.
 
