@@ -35,16 +35,20 @@ Do you want to perform these actions?
 ## Output Example
 ```
 START RequestId: beda210d-f258-439e-9614-8ad4a4311080 Version: $LATEST
-Deregistering AMIs: 
+
+Deregistering "Previous" AMIs:
 ami-0233866832fd8ff1a
 ami-067ee5d4d8649204
-Deleting snapshots: 
+
+Deleting Snapshots associated with "Previous" AMIs: 
 snap-02c911235227e207b
 snap-042919322ffdd611
-Rotating AMIs: 
+
+Rotating "Current" AMIs to "Previous":
 ami-05abc5d22c44b5fdd
 ami-0d24a86f6602b4293
-Creating AMIs from Instances: 
+
+Creating "Current" AMIs from EC2 Instances:
 Instance: i-07862db7a0741b757 , AMI: ami-0c2cdc82e02764277
 Instance: i-08b58cb4caac5c9e9 , AMI: ami-0935dc03d8fd95874
 END RequestId: beda210d-f258-439e-9614-8ad4a4311080

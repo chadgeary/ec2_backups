@@ -29,7 +29,7 @@ def lambda_handler(event, context):
                   if key == 'SnapshotId':
                     previous_snaps.append(snap)
     
-    print('Deregistering AMIs: ')
+    print('\nDeregistering "Previous" AMIs:')
 
     # deregister amis
     for previous_ami in previous_amis['Images']:
@@ -39,7 +39,7 @@ def lambda_handler(event, context):
           ami_resource = list(boto3.resource('ec2').images.filter(ImageIds=[value]).all())[0]
           ami_resource.deregister()
 
-    print('Deleting snapshots: ')
+    print('\nDeleting Snapshots associated with "Previous" AMIs:')
 
     # delete snapshots
     for previous_snap in previous_snaps:
@@ -56,7 +56,7 @@ def lambda_handler(event, context):
       ]
     )
 
-    print('Rotating AMIs: ')
+    print('\nRotating "Current" AMIs to "Previous":')
 
     # rotate tag:Generation value:Current ami(s) to tag:Generation value:Previous
     for current_ami in current_amis['Images']:
@@ -93,7 +93,7 @@ def lambda_handler(event, context):
             instance_details['ami_name'] = tag['Value'] + '_' + strftime('%Y-%m-%d-%H%M', gmtime())
         backup_instances.append(instance_details)
     
-    print('Creating AMIs from Instances: ')
+    print('\nCreating "Current" AMIs from EC2 Instances:')
     
     # create ami for each instance_id in instance_ids
     for backup_instance in backup_instances:
