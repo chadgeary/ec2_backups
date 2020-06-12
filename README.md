@@ -1,11 +1,11 @@
 # Reference
-Maintain up-to-date backups for EC2 instances with a Cloudwatch scheduled expression executing Lambda (Python3/Boto3) built via Terraform. Two generations of EC2 AMIs (Previous and Current) are maintained.
+Maintain up-to-date backups for EC2 instances with a Cloudwatch scheduled expression executing Lambda (Python3/Boto3) built via Terraform. Two generations of EC2 AMIs (`Previous` and `Current`) are maintained.
 
 ## Lambda (ec2_backups.py)
 Steps are in reverse order.
-1. Create AMIs with tag:`Generation:Current` and tag:`Source:ec2_backups` from EC2 instances with tag:Backup:true
-2. Modify AMIs with tag:`Generation:Current` and tag:`Source:ec2_backups` to tag:`Generation:Previous`
-3. Delete AMIs with tag:`Generation:Previous` and tag:`Source:ec2_backups` + associated snapshot(s).
+1. Create AMIs with tag `Generation:Current` and tag `Source:ec2_backups` from EC2 instances with tag:Backup:true
+2. Modify AMIs with tag `Generation:Current` and tag `Source:ec2_backups` to tag `Generation:Previous`
+3. Delete AMIs with tag `Generation:Previous` and tag `Source:ec2_backups` + associated snapshot(s).
 
 ## Notes
 - Includes required IAM role/policy for Lambda function.
